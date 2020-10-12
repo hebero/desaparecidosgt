@@ -28,9 +28,11 @@ class RetweetFromThird(tweepy.StreamListener):
                 logger.error("Error on retweet", exc_info=True)
     
     def on_error(self, status):
-        logger.error(status)
+        logger.error("Error on retweet ",status)
+        time.sleep(3600)
 
 def main(keywords):
+    time.sleep(3600)
     api = start_api()
     tweets_listener = RetweetFromThird(api=api)
     stream = tweepy.Stream(api.auth, tweets_listener)

@@ -19,7 +19,7 @@ def reply_mentions(api, since_id):
                     parentTweet.retweet()
                 except Exception as e:
                     logger.error("Error on retweet", exc_info=True)
-            logger.info("Retweeting...")
+            logger.info("auto reply...")
         else:
             if not tweet.retweeted:
                 try:
@@ -32,6 +32,7 @@ def on_error(self, status):
     logger.error(status)
 
 def main():
+    logger.info("start auto reply...")
     api = start_api()
     since_id = 1
     while True:

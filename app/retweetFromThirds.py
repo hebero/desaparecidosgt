@@ -6,7 +6,7 @@ import json
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
-hashtags = ["#IsabelClaudina", "#AlertaIsabelClaudina", "#AlertaAlbaKeneth", "#AlbaKeneth"]
+hashtags = ["#IsabelClaudina", "#AlertaIsabelClaudina", "#AlertaAlbaKeneth", "#AlbaKeneth", "#desaparecidosgt", "#botaparecegt"]
 class RetweetFromThird(tweepy.StreamListener):
     def __init__(self, api):
         """

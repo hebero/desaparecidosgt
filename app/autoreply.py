@@ -13,17 +13,23 @@ def reply_mentions(api, since_id):
     for tweet in tweepy.Cursor(api.mentions_timeline,
      since_id=since_id).items():
         if tweet.in_reply_to_status_id is not None:
-            continue
-        
-        logger.info("Retweeting...")
-        if tweet.in_reply_to_user_id is not None:
-            parentTweet = api.get_status(tweet.in_reply_to_user_id)
+            parentTweet = api.get_status(tweet.in_reply_to_status_id)
             if not parentTweet.retweeted:
-                parentTweet.retweet()
+                try:
+                    parentTweet.retweet()
+                except Exception as e:
+                    logger.error("Error on retweet", exc_info=True)
+            logger.info("Retweeting...")
         else:
             if not tweet.retweeted:
-                tweet.retweet()
+                try:
+                    tweet.retweet()
+                except Exception as e:
+                    logger.error("Error on retweet", exc_info=True)
     return new_since_id
+
+def on_error(self, status):
+    logger.error(status)
 
 def main():
     api = start_api()

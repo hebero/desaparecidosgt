@@ -1,6 +1,7 @@
 # app/retweetFromThird.py
 import tweepy
 import logging
+import time
 from initApi import start_api
 import json
 
@@ -16,6 +17,7 @@ class RetweetFromThird(tweepy.StreamListener):
         self.api = api
         self.me = api.me()
     def on_status(self, tweet):
+        time.sleep(120)
         logger.info(f"Processing tweet with id: {tweet.id}")
         if tweet.in_reply_to_status_id is not None or tweet.user.id == self.me.id:
             return

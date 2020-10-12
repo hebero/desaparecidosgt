@@ -37,7 +37,7 @@ def main(keywords):
     api = start_api()
     tweets_listener = RetweetFromThird(api=api)
     stream = tweepy.Stream(api.auth, tweets_listener)
-    stream.filter(track=keywords, languages=["es"])
+    stream.filter(track=keywords)
 
 if __name__ == "__main__":
     main(keywords=hashtags)

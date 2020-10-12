@@ -26,6 +26,7 @@ class RetweetFromThird(tweepy.StreamListener):
                 tweet.retweet()
             except Exception as e:
                 logger.error("Error on retweet", exc_info=True)
+                time.sleep(300)
     
     def on_error(self, status):
         logger.error("Error on retweet ",status)

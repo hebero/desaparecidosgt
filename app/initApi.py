@@ -12,7 +12,7 @@ def start_api():
     auth = tweepy.OAuthHandler(c_key, c_secret)
     auth.set_access_token(a_token,a_token_secrete)
     twApi = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
-    
+     
     try:
         twApi.verify_credentials()
         logging.info("verify successfull")

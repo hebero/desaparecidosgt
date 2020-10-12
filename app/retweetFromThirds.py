@@ -6,7 +6,7 @@ import json
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
-
+hashtags = ["#IsabelClaudina", "#AlertaIsabelClaudina", "#AlertaAlbaKeneth", "#AlbaKeneth"]
 class RetweetFromThird(tweepy.StreamListener):
     def __init__(self, api):
         """
@@ -19,8 +19,6 @@ class RetweetFromThird(tweepy.StreamListener):
         logger.info(f"Processing tweet with id: {tweet.id}")
         if tweet.in_reply_to_status_id is not None or tweet.user.id == self.me.id:
             return
-        if not tweet.favorited:
-            return 
         if not tweet.retweeted:
             try:
                 tweet.retweet()
@@ -37,6 +35,6 @@ def main(keywords):
     stream.filter(track=keywords, languages=["es"])
 
 if __name__ == "__main__":
-    main(keywords=["albakeneth", "alertaalbakeneth"])
+    main(keywords=hashtags)
         
             

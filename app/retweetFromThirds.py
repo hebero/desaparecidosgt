@@ -11,8 +11,7 @@ hashtags = ["#IsabelClaudina", "#AlertaIsabelClaudina", "#AlertaAlbaKeneth", "#A
 class RetweetFromThird(tweepy.StreamListener):
     def __init__(self, api):
         """
-        Init stream and listening from twitter with
-        certian words
+        The stream get tweets what contain the keywords in hashtag
         """
         self.api = api
         self.me = api.me()
@@ -30,6 +29,7 @@ class RetweetFromThird(tweepy.StreamListener):
     
     def on_error(self, status):
         logger.error("Error on retweet ",status)
+        #wait if twitter return 420 error
         time.sleep(3600)
 
 def main(keywords):

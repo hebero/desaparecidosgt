@@ -5,6 +5,7 @@ import logging
 logger =  logging.getLogger()
 
 def start_api():
+    #get keys from os registry
     c_key = os.getenv("CONSUMER_KEY")
     c_secret = os.getenv("CONSUMER_SECRET")
     a_token = os.getenv("ACCESS_TOKEN")
@@ -19,5 +20,5 @@ def start_api():
     except Exception as e:
         logger.error("error creating the api. Info: ", exc_info=True)
         raise e
-    logger.info("Ok :D")
+    logger.info("Logged in twitter api")
     return twApi

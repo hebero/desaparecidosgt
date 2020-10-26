@@ -13,7 +13,7 @@ logging.basicConfig(level=logging.INFO)
 history =  set()
 logger = logging.getLogger()
 lastHtml = ""
-def save_image(image, api):
+def save_image(image, webInfo, api):
     res = requests.get(image, headers={'User-Agent': 'Chrome'}, stream=True)
     if res.status_code == 200:
         title = image.rfind('/')
@@ -22,7 +22,7 @@ def save_image(image, api):
             crop = crop_image(im)
             crop.save(filename, quality=95)
             try:
-                api.update_with_media(filename, status="#AlertaAlbaKeneth Ayuda a encontrar a esta persona compartiendo esta información: ")
+                api.update_with_media(filename, status=f"#AlertaAlbaKeneth Ayuda a encontrar a esta persona compartiendo esta información: {webInfo}")
             except Exception as e:
                 logger.error(e)
 
@@ -31,15 +31,15 @@ def crop_image(imageSource):
     date = imageSource.crop((1170,100,
                     1710,400))
     logo =  imageSource.crop((100, 1750, 1785/2, 2150))
-    logo.thumbnail((600,700), Image.ANTIALIAS)
+    logo.thumbnail((350,450), Image.ANTIALIAS)
     print(im1.size)
-    im1.thumbnail((1700,786), Image.ANTIALIAS)
-    #date.thumbnail((100,400), Image.ANTIALIAS)
-    newImage =  Image.new('RGB', (1700,786),(255,255,255,255))
+    im1.thumbnail((1100,628), Image.ANTIALIAS)
+    date.thumbnail((300,400), Image.ANTIALIAS)
+    newImage =  Image.new('RGB', (1100,628),(255,255,255,255))
     newImage.paste(im1, (-50,0))
 
-    newImage.paste(logo, (1100,300))
-    newImage.paste(date, (1100,10))
+    newImage.paste(logo, (800,300))
+    newImage.paste(date, (800,100))
     return newImage
 
 def updateStatus(self, image):
@@ -58,7 +58,7 @@ def readWebSite():
         for i in table:
             for l in i.find_all('img'):
                 if l['src'].__contains__('.jpg'):
-                    save_image(l['src'], api)
+                    save_image(l['src'], l['alt'], api)
         del soup
                 
 

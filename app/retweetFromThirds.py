@@ -5,6 +5,7 @@ import time
 from initApi import start_api
 import json
 
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
 hashtags = ["#IsabelClaudina", "#AlertaIsabelClaudina", "#AlertaAlbaKeneth", "#AlbaKeneth", "#desaparecidosgt", "#botaparecegt"]
@@ -39,7 +40,11 @@ def main(keywords):
     stream = tweepy.Stream(api.auth, tweets_listener)
     stream.filter(track=keywords)
 
+def loadKeyWords():
+
+
 if __name__ == "__main__":
+
     main(keywords=hashtags)
         
             

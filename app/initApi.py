@@ -1,31 +1,8 @@
 import tweepy
 import os
 import logging
-from mysql.connector import connect, Error
 
 logger =  logging.getLogger()
-
-sqlConnection = getConnection()
-keyWords = []
-
-def getConnection():
-    try:
-        with connect(
-            host="localhost",
-            user= os.getenv("SQLUSER"),
-            password = os.getenv("SQLPASS"),
-        ) as connection:
-            return connection
-    except Error as e:
-        raise e
-
-def getKeyWords():
-    query = "SELECT WORDS FROM KEYWORDS"
-    with sqlConnection.cursor() as cursor: 
-        cursor.execute(query)
-        result = cursor.fetchall()
-        for row in result:
-
 
 def start_api():
     #get keys from os registry

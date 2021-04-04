@@ -8,8 +8,8 @@ class TweetsRepository():
     def __init__(self):
         self.config = {
             "host": "localhost",
-            "user": "root" ,#os.getenvt("SQLUSER"),
-            "password": "root" ,#os.getenvt("SQLUSER"),
+            "user": os.getenvt("SQLUSER"),
+            "password": os.getenvt("SQLUSER"),
             "database" : "desaparecidosgt"
         }
     

@@ -18,10 +18,12 @@ class TweetsRepository():
         with connect(**self.config) as connection:
             if connection.is_connected():
                 with connection.cursor() as cursor:
-                    query = "INSERT INTO ReTweets (id, created_at) values ('{}', '{}')" .format(id, date)
-                    cursor.execute(query)
-                    connection.commit()
-                    connection.close()
+                    if not (self.isRetweeted(id)):
+
+                        query = "INSERT INTO ReTweets (id, created_at) values ('{}', '{}')" .format(id, date)
+                        cursor.execute(query)
+                        connection.commit()
+                        connection.close()
 
 
     def isRetweeted(self, id):

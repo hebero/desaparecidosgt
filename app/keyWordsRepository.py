@@ -6,8 +6,8 @@ class keyWordsRepository:
     def __init__(self):
         self.config = {
             "host": "localhost",
-            "user": "root" ,#os.getenvt("SQLUSER"),
-            "password": "root" ,#os.getenvt("SQLUSER"),
+            "user": "python" ,#os.getenvt("SQLUSER"),
+            "password": "pythonpass" ,#os.getenvt("SQLUSER"),
             "database" : "desaparecidosgt"
         }
 

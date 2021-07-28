@@ -20,6 +20,7 @@ def reply_mentions(api, since_id):
         new_since_id = since_id
         for tweet in tweepy.Cursor(api.mentions_timeline,
         since_id=since_id).items():
+            new_since_id = max(tweet.id, new_since_id)
             if tweet.in_reply_to_status_id is not None:
                 new_since_id = max(tweet.id, new_since_id)
                 parentTweet = api.get_status(tweet.in_reply_to_status_id)
@@ -32,6 +33,7 @@ def reply_mentions(api, since_id):
                             logger.info("auto reply...")
                     except Exception as e:
                         logger.error("Error on retweet", exc_info=True)
+                        logger.error(e.message)
             else:
                 if not tweet.retweeted and len(tweet.entities['urls']) > 0:
                     try:
@@ -41,10 +43,10 @@ def reply_mentions(api, since_id):
                     except Exception as e:
                         tweetRepo.InsertNewTweet(tweet.id, tweet.created_at)
                         logger.error("Error on retweet", exc_info=True)
+                        logger.error(e.message)
     except Exception as e:
         logger.error("General error")
         return new_since_id
-
     return new_since_id
 
 def on_error(self, status):

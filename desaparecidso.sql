@@ -15,3 +15,10 @@ CREATE TABLE ReTweets(
 );
 
  
+update KEYWORDS set wtype = "located"
+where words = "localizada"
+OR words = "localizado"
+OR words = "localización";
+
+CREATE TABLE LocatedTweets(id VARCHAR(500), tweet_text VARCHAR(500) , created_at date);
+

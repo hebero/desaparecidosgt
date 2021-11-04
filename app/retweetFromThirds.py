@@ -27,7 +27,12 @@ class RetweetFromThird(tweepy.StreamListener):
         logger.info(f"Processing tweet with id: {tweet.id}")
         if tweet.in_reply_to_status_id is not None or tweet.user.id == self.me.id:
             return
-        if not tweet.retweeted and not any(jumps in tweet.text.lower() for jumps in jump) and tweet.created_at > since:
+        tweetText = tweet.text.lower()
+        hasJumps = any(jumps in tweetText for jumps in jump)
+        isLocated = any(locatedWord in tweetText for locatedWord in locatedKeys)
+        if isLocated:
+            tweetRepo.InsertNewTweet(tweet.id, tweet.created_at)
+        if not tweet.retweeted and not hasJumps and tweet.created_at > since:
             try:
                 if not tweetRepo.isRetweeted(tweet.id):
                     tweetRepo.InsertNewTweet(tweet.id, tweet.created_at)
@@ -58,6 +63,7 @@ if __name__ == "__main__":
     since = datetime.datetime(2021, 3, 15)
     keyRepo = keyWordsRepository()
     jump = keyRepo.getKeyWords("jump")
+    locatedKeys = keyRepo.getKeyWords("located")
     hashtags = keyRepo.getKeyWords("key")
     main(keywords=hashtags)
         

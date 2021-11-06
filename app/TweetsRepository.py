@@ -47,4 +47,18 @@ class TweetsRepository():
                     connection.close()
                     return True
             
+    def isLocated(self, id):
+        with connect(**self.config) as connection:
+            if connection.is_connected():
+                with connection.cursor() as cursor:
+                    query = "SELECT id FROM LocatedTweets WHERE id = '{}'".format(str(id))
+                    cursor.execute(query)
+                    result = cursor.fetchall()
+                    if len(result)== 0:
+                        connection.close()
+                        return False
+                    else:
+                        connection.close()
+                        return True
+
 

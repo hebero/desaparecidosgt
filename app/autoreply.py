@@ -24,7 +24,14 @@ def reply_mentions(api, since_id):
             if tweet.in_reply_to_status_id is not None:
                 new_since_id = max(tweet.id, new_since_id)
                 parentTweet = api.get_status(tweet.in_reply_to_status_id)
-                if not (any(jumps in parentTweet.text.lower() for jumps in jump ))\
+                tweetText = parentTweet.text.lower()
+                hasJumpsWords = hasAnyKeyWord(jump, tweetText)
+
+                if(hasAnyKeyWord(locatedKeys, tweetText)):
+                    if not tweetRepo.isLocated(parentTweet.id):
+                        tweetRepo.InsertNewLocatedTweet(parentTweet.id, tweetText, parentTweet.created_at)
+                
+                if not (hasJumpsWords)\
                         and len(tweet.entities['urls']) > 0 and since < parentTweet.created_at:
                     try:
                         if not tweetRepo.isRetweeted(parentTweet.id):
@@ -62,8 +69,12 @@ def main():
         logger.info("Waiting...")
         time.sleep(120)
 
+def hasAnyKeyWord(keys, text):
+    return any(key in text for key in keys)
+
 if __name__ == "__main__":
     since = datetime.datetime(2021, 3, 15)
     keyRepo = keyWordsRepository()
     jump = keyRepo.getKeyWords("jump")
+    locatedKeys = keyRepo.getKeyWords("located")
     main()

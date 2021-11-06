@@ -31,7 +31,8 @@ class RetweetFromThird(tweepy.StreamListener):
         hasJumps = any(jumps in tweetText for jumps in jump)
         isLocated = any(locatedWord in tweetText for locatedWord in locatedKeys)
         if isLocated:
-            tweetRepo.InsertNewTweet(tweet.id, tweet.created_at)
+            if not tweetRepo.isLocated(tweet.id):
+                tweetRepo.InsertNewTweet(tweet.id, tweet.created_at)
         if not tweet.retweeted and not hasJumps and tweet.created_at > since:
             try:
                 if not tweetRepo.isRetweeted(tweet.id):

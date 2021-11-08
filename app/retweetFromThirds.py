@@ -86,7 +86,7 @@ class RetweetFromThird(tweepy.StreamListener):
                         hashtag = departamentos2[wholeWord]
                         break
         
-        return "#AlertaAlbaKeneth"
+        return hashtag
 
 
 
@@ -108,7 +108,14 @@ if __name__ == "__main__":
     jump = keyRepo.getKeyWords("jump")
     locatedKeys = keyRepo.getKeyWords("located")
     hashtags = keyRepo.getKeyWords("key")
-    hashtags=["#AlertaAlbaKeneth "]
+    departamentos1 = keyRepo.getDepartamentosByWords(1)
+    departamentos2 = keyRepo.getDepartamentosByWords(2)
+    print("hashtags":)
+    print(hashtags)
+    print("departamentos:")
+    print(departamentos1)
+    print(departamentos2)
+
     main(keywords=hashtags)
         
             

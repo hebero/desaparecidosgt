@@ -29,7 +29,7 @@ class TweetsRepository():
         with connect(**self.config) as connection:
             if connection.is_connected():
                 with connection.cursor() as cursor:
-                    query = "INSERT INTO LocatedTweets(id, tweet_text, created_at) values ('{}','{}', '{}'".format(id, text, date)
+                    query = "INSERT INTO LocatedTweets(id, tweet_text, created_at) values ('{}','{}', '{}')".format(id, text, date)
                     cursor.execute(query)
                     connection.commit()
                     connection.close()

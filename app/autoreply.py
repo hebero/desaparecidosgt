@@ -81,7 +81,7 @@ def hasAnyKeyWord(keys, text):
     return any(key in text for key in keys)
 
 if __name__ == "__main__":
-    since = datetime.datetime(2021, 3, 15)
+    since = datetime.datetime(2021, 6, 15)
     keyRepo = keyWordsRepository()
     jump = keyRepo.getKeyWords("jump")
     locatedKeys = keyRepo.getKeyWords("located")

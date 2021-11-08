@@ -110,7 +110,7 @@ if __name__ == "__main__":
     hashtags = keyRepo.getKeyWords("key")
     departamentos1 = keyRepo.getDepartamentosByWords(1)
     departamentos2 = keyRepo.getDepartamentosByWords(2)
-    print("hashtags":)
+    print("hashtags: ")
     print(hashtags)
     print("departamentos:")
     print(departamentos1)

@@ -14,6 +14,9 @@ logger = logging.getLogger()
 sice =  None
 jump = []
 keyRepo = None
+departamentos1 = dict()
+departamentos2 = dict()
+locatedKeys = set()
 tweetRepo = TweetsRepository()
 class RetweetFromThird(tweepy.StreamListener):
     def __init__(self, api):
@@ -22,6 +25,17 @@ class RetweetFromThird(tweepy.StreamListener):
         """
         self.api = api
         self.me = api.me()
+    def quoted_tweet(self, tweet):
+        try:
+            tweetId = tweet.id
+            tweetUser = tweet.user.screen_name
+            getHashtags = self.getHashTag(tweet.text.lower())
+            quotedTweet = "https://twitter.com/{}/status/{}".format(tweetUser, tweetId)
+            tweetText = "Ayúdanos a encontrar esta persona compartiendo esta información {}".format(getHashtags)
+            self.api.update_status(tweetText, attachment_url=quotedTweet)
+        except Exception as e:
+            logger.error("")
+
     def on_status(self, tweet):
         #time.sleep(120)
         logger.info(f"Processing tweet with id: {tweet.id}")
@@ -37,6 +51,11 @@ class RetweetFromThird(tweepy.StreamListener):
             try:
                 if not tweetRepo.isRetweeted(tweet.id):
                     tweetRepo.InsertNewTweet(tweet.id, tweet.created_at)
+                    if (tweet.retweeted_status is None):
+                        self.quoted_tweet(tweet)
+                    else:
+                        if(not tweetRepo.isRetweeted(tweet.retweeted_status.id)):
+                            self.quoted_tweet(tweet.retweeted_status)
                     tweet.retweet()
             except Exception as e:
                 tweetRepo.InsertNewTweet(tweet.id, tweet.created_at)
@@ -47,6 +66,29 @@ class RetweetFromThird(tweepy.StreamListener):
         logger.error("Error on retweet ",status)
         #wait if twitter return 420 error
         time.sleep(3600)
+
+
+    def getHashTag(self, tweetText):
+        hashtag = ""
+        setOfText = tweetText.split(' ')
+        for index in range(len(setOfText)):
+            word = setOfText[index]
+            if word in departamentos1:
+                hashtag = departamentos1[word]
+                break
+        if hashtag == "":
+            
+            for index in range(len(setOfText)):
+                word = setOfText[index]
+                if (index - 1) > 0:
+                    wholeWord = setOfText[index -1] + ' ' + word
+                    if any(deparamento in wholeWord for deparamento in departamentos2):
+                        hashtag = departamentos2[wholeWord]
+                        break
+        
+        return "#AlertaAlbaKeneth"
+
+
 
 def main(keywords):
     #time.sleep(3600)
@@ -61,11 +103,12 @@ def main(keywords):
         main(keywords=hashtags)
 
 if __name__ == "__main__":
-    since = datetime.datetime(2021, 3, 15)
+    since = datetime.datetime(2021, 6, 15)
     keyRepo = keyWordsRepository()
     jump = keyRepo.getKeyWords("jump")
     locatedKeys = keyRepo.getKeyWords("located")
     hashtags = keyRepo.getKeyWords("key")
+    hashtags=["#AlertaAlbaKeneth "]
     main(keywords=hashtags)
         
             

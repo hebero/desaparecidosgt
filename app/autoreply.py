@@ -14,6 +14,9 @@ jump = []
 keyRepo = None
 tweetRepo = TweetsRepository()
 since  = None
+departamentos1 = dict()
+departamentos2 = dict()
+locatedKeys = set()
 def reply_mentions(api, since_id):
     try:
         logger.info("new metion")
@@ -37,6 +40,7 @@ def reply_mentions(api, since_id):
                         if not tweetRepo.isRetweeted(parentTweet.id):
                             tweetRepo.InsertNewTweet(parentTweet.id, parentTweet.created_at)
                             parentTweet.retweet()
+
                             logger.info("auto reply...")
                     except Exception as e:
                         logger.error("Error on retweet", exc_info=True)
@@ -55,6 +59,10 @@ def reply_mentions(api, since_id):
         logger.error("General error")
         return new_since_id
     return new_since_id
+
+
+    
+
 
 def on_error(self, status):
     logger.error(status)
@@ -77,4 +85,6 @@ if __name__ == "__main__":
     keyRepo = keyWordsRepository()
     jump = keyRepo.getKeyWords("jump")
     locatedKeys = keyRepo.getKeyWords("located")
+    departamentos1 = keyRepo.getDepartamentosByWords(1)
+    departamentos2 = keyRepo.getDepartamentosByWords(2)
     main()

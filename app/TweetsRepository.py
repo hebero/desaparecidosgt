@@ -60,5 +60,3 @@ class TweetsRepository():
                     else:
                         connection.close()
                         return True
-
-

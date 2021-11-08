@@ -9,7 +9,7 @@ class TweetsRepository():
         self.config = {
             "host": "localhost",
             "user": os.getenv("SQLUSER"),
-            "password": os.getenv("SQLUSER"),
+            "password": os.getenv("SQLPASS"),
             "database" : "desaparecidosgt"
         }
     

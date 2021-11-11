@@ -14,6 +14,8 @@ logger = logging.getLogger()
 sice =  None
 jump = []
 keyRepo = None
+albaKenethKeys = set()
+isabelClaudinaKeys = set()
 departamentos1 = dict()
 departamentos2 = dict()
 locatedKeys = set()
@@ -25,14 +27,19 @@ class RetweetFromThird(tweepy.StreamListener):
         """
         self.api = api
         self.me = api.me()
-    def quoted_tweet(self, tweet):
+    def quoted_tweet(self, tweet, isAlbaKeneth):
         try:
             if(not tweet.user.screen_name =="botaparecegt"):
+                names = "esta persona"
                 tweetId = tweet.id
                 tweetUser = tweet.user.screen_name
+                if isAlbaKeneth==True:
+                    names = self.getNameAlbaKeneth(tweet.full_text)
                 getHashtags = self.getHashTag(tweet.full_text.lower())
+                
+                    
                 quotedTweet = "https://twitter.com/{}/status/{}".format(tweetUser, tweetId)
-                tweetText = "Ayúdanos a encontrar esta persona compartiendo esta información {}".format(getHashtags)
+                tweetText = "Ayúdanos a encontrar a {} compartiendo su información {}".format(names,getHashtags)
                 self.api.update_status(tweetText, attachment_url=quotedTweet)
 
         except Exception as e:
@@ -47,24 +54,26 @@ class RetweetFromThird(tweepy.StreamListener):
             return
         full_tweet  = self.api.get_status(tweet.id, tweet_mode='extended')
         tweetText = full_tweet.full_text.lower()
-
-        hasJumps = any(jumps in tweetText for jumps in jump)
+        hasBlockedWords = hasAnyKey(jump, tweetText)
+        isIsabelClaudina = hasAnyKey(isabelClaudinaKeys, tweetText)
+        isAlbaKeneth = hasAnyKey(albaKenethKeys, tweetText)
         isMe = tweet.user.screen_name == "botaparecegt"
-        isLocated = any(locatedWord in tweetText for locatedWord in locatedKeys)
+        isLocated = hasAnyKey(locatedKeys,tweetText)
         if isLocated and not isMe:
             if not tweetRepo.isLocated(tweet.id):
                 tweetRepo.InsertNewLocatedTweet(tweet.id,tweetText, tweet.created_at)
-        if not tweet.retweeted and not hasJumps and tweet.created_at > since and not isMe:
+        if not hasBlockedWords and tweet.created_at > since and not isMe:
             try:
                 if not tweetRepo.isRetweeted(tweet.id):
-                    tweetRepo.InsertNewTweet(tweet.id, tweet.created_at)
-                    if (tweet.retweeted_status is None):
-                        self.quoted_tweet(full_tweet)
-                    else:
-                        if(not tweetRepo.isRetweeted(tweet.retweeted_status.id)):
-                            originalTweet = self.api.get_status(tweet.retweeted_status.id, tweet_mode='extended')
-                            print(originalTweet)
-                            self.quoted_tweet(originalTweet)
+                    #tweetRepo.InsertNewTweet(tweet.id, tweet.created_at)
+                    if(isAlbaKeneth or isabelClaudinaKeys):
+                        if (tweet.retweeted_status is None):
+                            self.quoted_tweet(full_tweet, isAlbaKeneth)
+                        else:
+                            if(not tweetRepo.isRetweeted(tweet.retweeted_status.id)):
+                                originalTweet = self.api.get_status(tweet.retweeted_status.id, tweet_mode='extended')
+                                print(originalTweet)
+                                self.quoted_tweet(originalTweet, isAlbaKeneth)
                     tweet.retweet()
             except Exception as e:
                 tweetRepo.InsertNewTweet(tweet.id, tweet.created_at)
@@ -76,6 +85,14 @@ class RetweetFromThird(tweepy.StreamListener):
         logger.error("Error on retweet ",status)
         #wait if twitter return 420 error
         time.sleep(3600)
+        
+    def getNameAlbaKeneth(self, tweetText):
+        indexOfSeparetor = tweetText.find('⚠️')
+        firstDot = tweetText.find('.')
+        if(indexOfSeparetor > 0 and firstDot > 0):
+            indexOfSeparetor = indexOfSeparetor + 4
+            names = tweetText[indexOfSeparetor:firstDot]
+            return names
 
 
     def getHashTag(self, tweetText):
@@ -107,6 +124,8 @@ class RetweetFromThird(tweepy.StreamListener):
         return hashtag
 
 
+def hasAnyKey(setOfKeys, text):
+    return any(key.lower() in text for key in setOfKeys)
 
 def main(keywords):
     #time.sleep(3600)
@@ -121,11 +140,14 @@ def main(keywords):
         main(keywords=hashtags)
 
 if __name__ == "__main__":
-    since = datetime.datetime(2021, 6, 15)
+    since = datetime.datetime(2021, 8, 15)
     keyRepo = keyWordsRepository()
+    allKeys = set()
     jump = keyRepo.getKeyWords("jump")
     locatedKeys = keyRepo.getKeyWords("located")
     hashtags = keyRepo.getKeyWords("key")
+    albaKenethKeys = keyRepo.getKeyWords("albakeneth")
+    isabelClaudinaKeys = keyRepo.getKeyWords("isabelclaudina")
     departamentos1 = keyRepo.getDepartamentosByWords(1)
     departamentos2 = keyRepo.getDepartamentosByWords(2)
     print("hashtags: ")
@@ -133,7 +155,10 @@ if __name__ == "__main__":
     print("departamentos:")
     print(departamentos1)
     print(departamentos2)
-
-    main(keywords=hashtags)
+    allKeys.update(hashtags)
+    allKeys.update(albaKenethKeys)
+    allKeys.update(isabelClaudinaKeys)
+    
+    main(keywords=allKeys)
         
             

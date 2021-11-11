@@ -22,3 +22,10 @@ OR words = "localización";
 
 CREATE TABLE LocatedTweets(id VARCHAR(500), tweet_text VARCHAR(500) , created_at date);
 
+
+update KEYWORDS set wtype = "albakeneth"
+where words = "#AlbaKeneth" OR words = "#AlertaAlbaKeneth";
+
+update KEYWORDS set wtype = "isabelclaudina"
+where words = "#AlertaIsabelClaudina";
+

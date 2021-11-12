@@ -65,9 +65,9 @@ class RetweetFromThird(tweepy.StreamListener):
         if not hasBlockedWords and tweet.created_at > since and not isMe:
             try:
                 if not tweetRepo.isRetweeted(tweet.id):
-                    #tweetRepo.InsertNewTweet(tweet.id, tweet.created_at)
+                    tweetRepo.InsertNewTweet(tweet.id, tweet.created_at)
                     if(isAlbaKeneth or isabelClaudinaKeys):
-                        if (tweet.retweeted_status is None):
+                        if (hasattr(tweet,'retweeted_status') and tweet.retweeted_status is None):
                             self.quoted_tweet(full_tweet, isAlbaKeneth)
                         else:
                             if(not tweetRepo.isRetweeted(tweet.retweeted_status.id)):

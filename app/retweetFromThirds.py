@@ -39,7 +39,7 @@ class RetweetFromThird(tweepy.StreamListener):
                 
                     
                 quotedTweet = "https://twitter.com/{}/status/{}".format(tweetUser, tweetId)
-                tweetText = "Ayúdanos a encontrar a {} compartiendo su información {}".format(names,getHashtags)
+                tweetText = " ❗ Ayúdanos a encontrar a {} compartiendo su información ❗{} ".format(names,getHashtags)
                 self.api.update_status(tweetText, attachment_url=quotedTweet)
 
         except Exception as e:
@@ -62,7 +62,7 @@ class RetweetFromThird(tweepy.StreamListener):
         if isLocated and not isMe:
             if not tweetRepo.isLocated(tweet.id):
                 tweetRepo.InsertNewLocatedTweet(tweet.id,tweetText, tweet.created_at)
-        if not hasBlockedWords and tweet.created_at > since and not isMe:
+        elif not hasBlockedWords and not isLocated and tweet.created_at > since and not isMe:
             try:
                 if not tweetRepo.isRetweeted(tweet.id):
                     tweetRepo.InsertNewTweet(tweet.id, tweet.created_at)
@@ -87,11 +87,13 @@ class RetweetFromThird(tweepy.StreamListener):
         time.sleep(3600)
         
     def getNameAlbaKeneth(self, tweetText):
-        indexOfSeparetor = tweetText.find('⚠️')
-        firstDot = tweetText.find('.')
+        txt = str(tweetText)
+        names = ""
+        indexOfSeparetor = txt.find(' ⚠ |')
+        firstDot = txt.find('.')
         if(indexOfSeparetor > 0 and firstDot > 0):
-            indexOfSeparetor = indexOfSeparetor + 4
-            names = tweetText[indexOfSeparetor:firstDot]
+            indexOfSeparetor = indexOfSeparetor + 5
+            names = txt[indexOfSeparetor:firstDot]
             return names
 
 

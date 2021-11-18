@@ -139,28 +139,32 @@ def main(keywords):
     except Exception as e:
         logger.error(e)
         time.sleep(3)
-        main(keywords=hashtags)
+        raise 
 
 if __name__ == "__main__":
-    since = datetime.datetime(2021, 8, 15)
-    keyRepo = keyWordsRepository()
-    allKeys = set()
-    jump = keyRepo.getKeyWords("jump")
-    locatedKeys = keyRepo.getKeyWords("located")
-    hashtags = keyRepo.getKeyWords("key")
-    albaKenethKeys = keyRepo.getKeyWords("albakeneth")
-    isabelClaudinaKeys = keyRepo.getKeyWords("isabelclaudina")
-    departamentos1 = keyRepo.getDepartamentosByWords(1)
-    departamentos2 = keyRepo.getDepartamentosByWords(2)
-    print("hashtags: ")
-    print(hashtags)
-    print("departamentos:")
-    print(departamentos1)
-    print(departamentos2)
-    allKeys.update(hashtags)
-    allKeys.update(albaKenethKeys)
-    allKeys.update(isabelClaudinaKeys)
-    
-    main(keywords=allKeys)
+    try:
+        since = datetime.datetime(2021, 8, 15)
+        keyRepo = keyWordsRepository()
+        allKeys = set()
+        jump = keyRepo.getKeyWords("jump")
+        locatedKeys = keyRepo.getKeyWords("located")
+        hashtags = keyRepo.getKeyWords("key")
+        albaKenethKeys = keyRepo.getKeyWords("albakeneth")
+        isabelClaudinaKeys = keyRepo.getKeyWords("isabelclaudina")
+        departamentos1 = keyRepo.getDepartamentosByWords(1)
+        departamentos2 = keyRepo.getDepartamentosByWords(2)
+        print("hashtags: ")
+        print(hashtags)
+        print("departamentos:")
+        print(departamentos1)
+        print(departamentos2)
+        allKeys.update(hashtags)
+        allKeys.update(albaKenethKeys)
+        allKeys.update(isabelClaudinaKeys)
+        
+        main(keywords=allKeys)
+    except Exception as e:
+        logger.error(e)
+        main(keywords=allKeys)
         
             

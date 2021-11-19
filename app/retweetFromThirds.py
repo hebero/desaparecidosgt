@@ -165,6 +165,7 @@ if __name__ == "__main__":
         main(keywords=allKeys)
     except Exception as e:
         logger.error(e)
+        time.sleep(1000)
         main(keywords=allKeys)
         
             
